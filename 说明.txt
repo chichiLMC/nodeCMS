@@ -1,6 +1,7 @@
 
 基于node+express
 
+依赖：npm install
 运行：npm start后
 
 浏览器访问 127.0.0.1:3000或//localhost:3000

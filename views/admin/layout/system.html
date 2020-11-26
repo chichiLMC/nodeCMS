@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>网站后台管理模版</title>
+		<link rel="stylesheet" type="text/css" href="layui/css/layui.css" />
+		<link rel="stylesheet" type="text/css" href="css/admin.css" />
+	</head>
+
+	<body>
+		<div class="layui-tab page-content-wrap">
+			<ul class="layui-tab-title">
+				<li class="layui-this">站点配置</li>
+				<li>SEO配置</li>
+				<li>邮箱配置</li>
+				<li>评论设置</li>
+			</ul>
+			<div class="layui-tab-content">
+				<!--站点配置-->
+				<div class="layui-tab-item layui-show">
+					<form class="layui-form" style="width: 90%;padding-top: 20px;">
+						<div class="layui-form-item">
+							<label class="layui-form-label">网站名称：</label>
+							<div class="layui-input-block">
+								<input type="text" name="webname" placeholder="xxxx官方网站" lay-verify="required" autocomplete="off" class="layui-input" value="">
+							</div>
+						</div>
+						<div class="layui-form-item">
+								<label class="layui-form-label" style="width: 90px;">网站LOGO：</label>
+								<div class="layui-input-block">
+									<input type="hidden" name="weblogo" value=""/>
+									<button type="button" class="layui-btn layui-btn-sm layui-bg-gray" id="upload">上传图片</button>
+									<img class="layui-upload-img" id="uploadlogo" width="38" height="38" src="" onerror="this.src='/admin/images/null.jpg'">
+								</div>
+							</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label">网站域名：</label>
+							<div class="layui-input-block">
+								<input type="text" name="domain" placeholder="www." autocomplete="off" class="layui-input" value="">
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label">座机电话：</label>
+							<div class="layui-input-block">
+								<input type="text" name="phone"  placeholder="请输入座机电话" autocomplete="off" class="layui-input" value="">
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label">手机号码：</label>
+							<div class="layui-input-block">
+								<input type="text" name="mobile" lay-verify="required"  placeholder="请输入手机号码" autocomplete="off" class="layui-input" value="">
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label">站长邮箱：</label>
+							<div class="layui-input-block">
+								<input type="text" name="email" required lay-verify="required" placeholder="请输入联系邮箱" autocomplete="off" class="layui-input" value="">
+							</div>
+						</div>
+						<!-- <div class="layui-form-item">
+							<label class="layui-form-label">是否缓存：</label>
+							<div class="layui-input-block">
+								<input type="checkbox" checked="" name="cache" lay-skin="switch" lay-filter="switchTest" lay-text="ON|OFF">
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label">静态首页：</label>
+							<div class="layui-input-block">
+								<input type="radio" name="static" value="1" title="生成" checked="">
+								<input type="radio" name="static" value="0" title="不生成">
+							</div>
+						</div> -->
+						<div class="layui-form-item">
+							<label class="layui-form-label">备案信息：</label>
+							<div class="layui-input-block">
+								<input type="text" name="icp" required lay-verify="required" placeholder="请输入备案信息" autocomplete="off" class="layui-input" value="">
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label">版权信息：</label>
+							<div class="layui-input-block">
+								<input type="text" name="copyright" required lay-verify="required" placeholder="请输入版权信息" autocomplete="off" class="layui-input" value="">
+							</div>
+						</div>
+						<div class="layui-form-item layui-form-text">
+								<label class="layui-form-label">其他信息：</label>
+								<div class="layui-input-block">
+									<textarea class="layui-textarea " name="other" lay-verify="content" id="other"></textarea>
+								</div>
+							</div>
+						<div class="layui-form-item layui-form-text">
+							<label class="layui-form-label">统计代码：</label>
+							<div class="layui-input-block">
+								<textarea class="layui-textarea " name="statistics" lay-verify="content" id="statistics"></textarea>
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<div class="layui-input-block">
+								<button class="layui-btn layui-btn-normal" lay-submit lay-filter="siteInfo">立即提交</button>
+							</div>
+						</div>
+					</form>
+				</div>
+				<!--SEO配置-->
+				<div class="layui-tab-item">
+					<form class="layui-form" style="width: 90%;padding-top: 20px;">
+						<div class="layui-form-item">
+							<label class="layui-form-label">SEO标题：</label>
+							<div class="layui-input-block">
+								<input type="text" name="seotitle" placeholder="请输入seo标题" autocomplete="off" class="layui-input" value="">
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label">关键字：</label>
+							<div class="layui-input-block">
+								<input type="text" name="keyword" placeholder="请输入seo关键字" autocomplete="off" class="layui-input" value="">
+							</div>
+						</div>
+						<div class="layui-form-item layui-form-text">
+							<label class="layui-form-label">描述：</label>
+							<div class="layui-input-block">
+								<textarea name="seodesc" placeholder="请输入seo描述" class="layui-textarea"></textarea>
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<div class="layui-input-block">
+								<button class="layui-btn layui-btn-normal" lay-submit lay-filter="seoInfo">立即提交</button>
+							</div>
+						</div>
+					</form>
+				</div>
+				<!--邮箱配置-->
+				<div class="layui-tab-item">
+					<form class="layui-form"  style="width: 90%;padding-top: 20px;">
+						<div class="layui-form-item">
+							<label class="layui-form-label">邮箱模式：</label>
+							<div class="layui-input-block">
+								<input type="radio" name="static" value="1" title="SMTP函数发送" checked="">
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label">服务器：</label>
+							<div class="layui-input-block">
+								<input type="text" name="smtp" placeholder="请输入邮件服务器" autocomplete="off" class="layui-input" value="smtp.163.com">
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label">端口：</label>
+							<div class="layui-input-block">
+								<input type="text" name="port" placeholder="请输入邮件发送端口" autocomplete="off" class="layui-input" value="25">
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label">发件人：</label>
+							<div class="layui-input-block">
+								<input type="text" name="email" placeholder="请输入发件人地址" autocomplete="off" class="layui-input" value="admin@abc3210.com">
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label">名称：</label>
+							<div class="layui-input-block">
+								<input type="text" name="name" placeholder="请输入发件人名称" autocomplete="off" class="layui-input" value="mfan管理员">
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label">用户名：</label>
+							<div class="layui-input-block">
+								<input type="text" name="username" placeholder="请输入用户名" autocomplete="off" class="layui-input" value="">
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<label class="layui-form-label">密码：</label>
+							<div class="layui-input-block">
+								<input type="text" name="password" placeholder="请输入密码" autocomplete="off" class="layui-input" value="">
+							</div>
+						</div>
+						<div class="layui-form-item">
+							<div class="layui-input-block">
+								<button class="layui-btn layui-btn-normal" lay-submit lay-filter="emailInfo">立即提交</button>
+							</div>
+						</div>
+					</form>
+				</div>
+				<!--评论设置-->
+				<div class="layui-tab-item">
+					<form class="layui-form" style="width: 90%;padding-top: 20px;">
+						<div class="layui-form-item">
+						    <label class="layui-form-label">评论审核：</label>
+						    <div class="layui-input-block">
+						      <input type="checkbox" name="audit" lay-skin="primary" title="开启" checked="">
+						    </div>
+						  </div>
+						<div class="layui-form-item">
+							<label class="layui-form-label">评论间隔：</label>
+							<div class="layui-input-inline">
+								<input type="text" name="time" placeholder="请输入评论时间间隔" autocomplete="off" class="layui-input" value="60">
+							</div>
+							<div class="layui-form-mid layui-word-aux">秒</div>
+						</div>
+						<div class="layui-form-item">
+							<div class="layui-input-block">
+								<button class="layui-btn layui-btn-normal" lay-submit lay-filter="commentInfo">立即提交</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+		<script src="layui/layui.js" type="text/javascript" charset="utf-8"></script>
+		<script>
+			//Demo
+			layui.use(['form','jquery','layer', 'upload','element', 'layedit'], function() {
+				var form = layui.form,
+					layer = layui.layer,
+					$ = layui.jquery,
+					layedit = layui.layedit;
+					//创建一个编辑器
+				var editIndex = layedit.build('statistics', {
+					height: 300,
+					uploadImage : {
+						url : '/adminAjax/layUploader',
+						type: 'post'
+					}
+				});
+				layedit.sync(editIndex);
+				layui.upload.render({
+					elem: '#upload',
+					url:'/adminAjax/uploader',
+					done: function(res, index, upload){
+						$("#uploadlogo").attr('src',res.data);
+						$("input[name=weblogo]").val(res.data);
+					}
+				});
+				//form.render();
+				$.get("/adminAjax/getwebSystem",function(res){
+					setValue(res.data[0]);
+				})
+				//监听信息提交
+				form.on('submit(siteInfo)', function(data) {
+					data.field.statistics = layedit.getContent(editIndex);
+					$.post("/adminAjax/webSystem",data.field,function(res){
+						layer.msg(res.msg);
+						if(res.code == 1){
+							setTimeout(function(){
+								location.reload();
+							},500)
+						}
+					})
+					return false;
+				});
+				//监听seo提交
+				form.on('submit(seoInfo)', function(data) {
+					$.post("/adminAjax/webSystemseo",data.field,function(res){
+						layer.msg(res.msg);
+						if(res.code == 1){
+							setTimeout(function(){
+								location.reload();
+							},500)
+						}
+					})
+					return false;
+				});
+				//监听邮箱提交
+				form.on('submit(emailInfo)', function(data) {
+					layer.msg(JSON.stringify(data.field));
+					return false;
+				});
+				//监听评论提交
+				form.on('submit(commentInfo)', function(data) {
+					layer.msg(JSON.stringify(data.field));
+					return false;
+				});
+				function setValue(d){
+					$("input[name=webname]").val(d.webname);
+					$("input[name=weblogo]").val(d.weblogo);
+					$("#uploadlogo").attr('src',d.weblogo);
+					$("input[name=domain]").val(d.domain);
+					$("input[name=phone]").val(d.phone);
+					$("input[name=mobile]").val(d.mobile);
+					$("input[name=email]").val(d.email);
+					$("input[name=icp]").val(d.icp);
+					$("textarea[name=other]").val(d.other);
+					$("input[name=copyright]").val(d.copyright);
+					$("textarea[name=statistics]").val(d.statistics);
+					$("input[name=seotitle]").val(d.seo_title);
+					$("input[name=keyword]").val(d.seo_key);
+					$("textarea[name=seodesc]").val(d.seo_desc);
+					form.render();
+				}
+			});
+		</script>
+	</body>
+
+</html>

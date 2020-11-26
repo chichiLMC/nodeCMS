@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>网站后台管理模版</title>
+		<link rel="stylesheet" type="text/css" href="layui/css/layui.css" />
+		<link rel="stylesheet" type="text/css" href="css/admin.css" />
+		<style>.layui-table th.center,.layui-table td.center{text-align: center}</style>
+	</head>
+	<body>
+		<div class="page-content-wrap">
+				<form class="layui-form" action="">
+					<div class="layui-form-item">
+						<div class="layui-inline tool-btn">
+							<button class="layui-btn layui-btn-sm layui-btn-normal addBtn" data-url="/admin/menuAdd"><i class="layui-icon">&#xe654;</i>添加</button>
+						</div>
+					</div>
+				</form>
+				<div class="layui-form" id="table-list">
+					<table class="layui-table" lay-even lay-skin="nob">
+						<thead>
+							<tr>
+								<th class="hidden-xs center" style="width: 50px;">ID</th>
+								<th class="hidden-xs center" style="width: 50px;">排序</th>
+								<th style="width: 300px;">菜单名称</th>
+								<th style="width: 150px;">英文名称</th>
+								<th class="hidden-xs center" style="width: 100px;">缩略图</th>
+								<th class="center">状态</th>
+								<th class="hidden-xs center" style="width: 200px;">发布时间</th>
+								<th class="center" style="width: 150px;">操作</th>
+							</tr>
+						</thead>
+						<tbody id="navTable">
+						</tbody>
+					</table>
+				</div>
+		</div>
+		<script src="layui/layui.js" type="text/javascript" charset="utf-8"></script>
+		<script>
+			layui.use(['form', 'jquery', 'layer',], function() {
+				var $ = layui.jquery,
+				form = layui.form,
+				layer = layui.layer;
+				var iframeObj = $(window.frameElement).attr('name');
+				$.get("/adminAjax/getMenu", function (res) {
+					//console.log(res);
+					$.each(res.data,function(i,val){
+						menu_html(val)
+						if(val.child.length !=0){
+							menu_child(val.child)
+						}
+					})
+                }, "json");
+				//修改状态
+				$('#table-list').on('click', '.table-list-status', function() {
+					var That = $(this);
+					var status = That.attr('data-status');
+					var id = That.attr('data-id');
+					$.post("/adminAjax/editMenuStatus",{id:id,status:status},function(res){
+						layer.msg(res.msg);
+						if(res.status == 0) {
+							That.removeClass('layui-btn-normal').addClass('layui-btn-warm').html('隐藏').attr('data-status', 0);
+						} else if(res.status == 1) {
+							That.removeClass('layui-btn-warm').addClass('layui-btn-normal').html('显示').attr('data-status', 1);
+						}
+					})
+				})
+				//删除
+				$('#table-list').on('click', '.del-btn', function() {
+					var id = $(this).attr('data-id');
+					layer.confirm('您确定要进行删除吗？', {
+						}, function(){
+							$.post("/adminAjax/delMenu",{id:id},function(res){
+								layer.msg(res.msg);
+								setTimeout(function(){
+									location.reload()
+								},500)
+							})
+						}, function(){
+					});
+					return false;
+				})
+				//添加
+				$('.addBtn').on('click' , function() {
+					var url = $(this).attr('data-url');
+					var isMoblie = false, w = '700px';
+					if(window.innerWidth <= 768) {
+						w = '320px;';
+						isMoblie=!0;
+					};
+					var index = layer.open({
+						type: 2,
+						title: "添加菜单",
+						area: [w, '620px'],
+						content: url,
+					});
+					if(isMoblie){
+						layer.full(index);
+					}
+					return false;
+				})
+				//编辑
+				$('#table-list').on('click', '.edit-btn', function() {
+					var obj = $(this).parents('td');
+					var data={
+						id : $(this).attr('data-id'),
+						url : $(this).attr('data-url'),
+						order: $(this).attr('data-order'),
+						parent: $(this).attr('data-par'),
+						name : obj.siblings(".name").attr('data-cn'),
+						ename: obj.siblings(".ename").text(),
+						type: obj.siblings(".name").attr('data-type'),
+						cover: obj.siblings().find('img').attr('src'),
+						status: obj.siblings().find('.table-list-status').attr('data-status'),
+						desc: obj.siblings(".name").attr('data-desc'),
+					}
+					var isMoblie = false, w = '700px';
+					if(window.innerWidth <= 768) {
+						w = '320px;';
+						isMoblie=!0;
+					};
+					var index = layer.open({
+						type: 2,
+						title: "编辑菜单",
+						area: [w, '620px'],
+						content: data.url+"?id="+data.id,
+						success:function(layero, index){
+							var body = layui.layer.getChildFrame('body', index);
+							body.find("*[name=id]").val(data.id);
+							body.find("*[name=name]").val(data.name);
+							body.find("*[name=ename]").val(data.ename);
+							body.find("*[name=img]").val(data.cover);
+							body.find("*[name=order]").val(data.order);
+							body.find("#status"+data.status).prop('checked',true),
+							body.find("#uploadimg").attr('src',data.cover);
+							body.find("*[name=desc]").val(data.desc);
+							$(body.find("#parent").children('option')).each(function(i,v){
+								if(v.value == data.parent){
+									$(this).prop('selected',true);
+									return false
+								}
+							})
+							$(body.find("#seleType").children('option')).each(function(i,v){
+								if(v.value == data.type){
+									$(this).prop('selected',true);
+									return false
+								}
+							})
+							//form.render();
+							var iframeW = layero.find('iframe')[0].contentWindow;
+								iframeW.layui.form.render();
+						}
+					});
+					if(isMoblie){
+						layer.full(index);
+					}
+					return false;
+				})
+				function menu_html(val){
+					var add_time = new Date(Number(val.add_time));
+					var setTime = add_time.toLocaleDateString().replace(/\//g, "-") + " " + add_time.toTimeString().substr(0, 8);
+					var html ='<tr>';
+					html+='<td class="hidden-xs center">'+val.id+'</td>';
+					html+='<td class="hidden-xs center"><input type="text" name="order" autocomplete="off" class="layui-input" value="'+ val.order+'" data-id="'+ val.id+'"></td>';
+					html+='<td class="name" data-cn="'+val.name +'" data-type="'+val.type+'" data-desc="'+val.desc+'">'+val.name+'</td>';
+					html+='<td class="ename">'+val.ename+'</td>';
+					html+='<td class="hidden-xs center"><img src="'+val.img+'" width=30 height=30 onerror="this.src=\'/admin/images/null.jpg\'" /></td>';
+					if(val.status==0){
+						html+='<td class="center"><button class="layui-btn layui-btn-xs layui-btn-warm table-list-status" data-id="'+ val.id+'" data-status="'+ val.status+'">隐藏</button></td>';
+					}else{
+						html+='<td class="center"><button class="layui-btn layui-btn-xs layui-btn-normal table-list-status" data-id="'+ val.id+'" data-status="'+ val.status+'">显示</button></td>';
+					}
+					html+='<td class="hidden-xs center">'+setTime+'</td>';
+					html+='<td class="center"><div class="layui-inline">'+
+								'<button class="layui-btn layui-btn-xs layui-btn-normal edit-btn" data-id="'+val.id+'" data-order="'+val.order+'" data-par="'+val.parent+'" data-url="/admin/menuAdd"><i class="layui-icon">&#xe642;</i></button>'+
+								'<button class="layui-btn layui-btn-xs layui-btn-danger del-btn" data-id="'+val.id+'"><i class="layui-icon">&#xe640;</i></button>'+
+								'</div></td>';
+					$("#navTable").append(html);
+				}
+				function menu_child(arr){
+					$.each(arr, function (i, v) { 
+						var add_time = new Date(Number(v.add_time));
+						var setTime = add_time.toLocaleDateString().replace(/\//g, "-") + " " + add_time.toTimeString().substr(0, 8);
+						var html ='<tr>';
+						html+='<td class="hidden-xs center">'+v.id+'</td>';
+						html+='<td class="hidden-xs center"><input type="text" name="order" autocomplete="off" class="layui-input" value="'+ v.order+'" data-id="'+ v.id+'"></td>';
+						html+='<td class="name" data-cn="'+v.name +'" data-type="'+v.type+'" data-desc="'+v.desc+'">&nbsp;&nbsp;&nbsp;&nbsp;├─'+v.name+'</td>';
+						html+='<td class="ename">'+v.ename+'</td>';
+						html+='<td class="hidden-xs center"><img src="'+v.img+'" width=30 height=30 onerror="this.src=\'/admin/images/null.jpg\'" /></td>';
+						if(v.status==0){
+							html+='<td class="center"><button class="layui-btn layui-btn-xs layui-btn-warm table-list-status" data-id="'+ v.id+'" data-status="'+ v.status+'">隐藏</button></td>';
+						}else{
+							html+='<td class="center"><button class="layui-btn layui-btn-xs layui-btn-normal table-list-status" data-id="'+ v.id+'" data-status="'+ v.status+'">显示</button></td>';
+						}
+						html+='<td class="hidden-xs center">'+setTime+'</td>';
+						html+='<td class="center"><div class="layui-inline">'+
+									'<button class="layui-btn layui-btn-xs layui-btn-normal  edit-btn" data-id="'+v.id+'" data-order="'+v.order+'" data-par="'+v.parent+'" data-url="/admin/menuAdd"><i class="layui-icon">&#xe642;</i></button>'+
+									'<button class="layui-btn layui-btn-xs layui-btn-danger del-btn" data-id="'+v.id+'"><i class="layui-icon">&#xe640;</i></button>'+
+									'</div></td>';
+						$("#navTable").append(html);
+					});
+				}
+			});
+		</script>
+	</body>
+
+</html>
